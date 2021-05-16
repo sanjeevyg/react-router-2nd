@@ -1,25 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import {Redirect, Route, Switch} from 'react-router-dom';
+import Home from './pages/home';
+import Contact from './pages/contact';
+import About from './pages/about';
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Switch>
+      <Route exact path='/' render={(routerProps) => <Home {...routerProps}/>} />
+      <Route exact path='/contact'component={Contact} />
+      <Route exact path='/about' render={(routerProps) => <About {...routerProps} name='Yogi' />} />
+      <PrivateRoute path='/profile' component={About} />
+    </Switch>
   );
+}  
+
+function PrivateRoute({component:Component, ...props}) {
+  return localStorage.token ?
+  <Route {...props} render={(routerProps) => <Component {...routerProps} {...props} />} />
+  :
+  <Redirect to='/login'/>
+
 }
 
 export default App;
